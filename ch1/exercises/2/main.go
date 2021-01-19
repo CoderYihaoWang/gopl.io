@@ -1,3 +1,5 @@
+// Prints the indexes and values of all command line arguments
+// including the program name. One line at a time
 package main
 
 import (
