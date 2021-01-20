@@ -17,7 +17,7 @@ import (
 var palette = []color.Color{color.RGBA{0x00, 0xff, 0x00, 0xff}, color.Black}
 
 const (
-	green      = 0 // first color in palette
+	greenIndex = 0 // first color in palette
 	blackIndex = 1 // next color in palette
 )
 
