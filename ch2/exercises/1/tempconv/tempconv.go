@@ -1,5 +1,5 @@
 // Convert among Celsius, Fahrenheit and Kalvin
-package main
+package tempconv
 
 import (
 	"fmt"
