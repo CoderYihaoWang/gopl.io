@@ -5,6 +5,7 @@ import (
 
 	p3 "popcount/ex3"
 	p4 "popcount/ex4"
+	p5 "popcount/ex5"
 )
 
 func main() {
@@ -21,5 +22,10 @@ func main() {
 	fmt.Println("Ex 2.4")
 	for _, n := range nums {
 		fmt.Printf("%064b: %d\n", n, p4.PopCount(n))
+	}
+
+	fmt.Println("Ex 2.5")
+	for _, n := range nums {
+		fmt.Printf("%064b: %d\n", n, p5.PopCount(n))
 	}
 }
