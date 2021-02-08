@@ -11,8 +11,9 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"log"
 	"math/cmplx"
-	"os"
+	"net/http"
 )
 
 func main() {
@@ -31,7 +32,12 @@ func main() {
 			img.Set(px, py, mandelbrot(z))
 		}
 	}
-	png.Encode(os.Stdout, img) // NOTE: ignoring errors
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		png.Encode(w, img)
+	})
+
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
 func mandelbrot(z complex128) color.Color {
