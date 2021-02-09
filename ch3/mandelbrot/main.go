@@ -17,6 +17,16 @@ import (
 )
 
 func main() {
+	http.HandleFunc("/", makeHandler(mandelbrot))
+	http.HandleFunc("/mandelbrot", makeHandler(mandelbrot))
+	http.HandleFunc("/acos", makeHandler(acos))
+	http.HandleFunc("/sqrt", makeHandler(sqrt))
+	http.HandleFunc("/newton", makeHandler(newton))
+
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+
+func makeImage(f func(complex128) color.Color) *image.RGBA {
 	const (
 		xmin, ymin, xmax, ymax = -2, -2, +2, +2
 		width, height          = 1024, 1024
@@ -29,18 +39,19 @@ func main() {
 			x := float64(px)/width*(xmax-xmin) + xmin
 			z := complex(x, y)
 			// Image point (px, py) represents complex value z.
-			img.Set(px, py, mandelbrot(z))
+			img.Set(px, py, f(z))
 		}
 	}
+	return img
+}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		err := png.Encode(w, img)
+func makeHandler(f func(complex128) color.Color) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := png.Encode(w, makeImage(f))
 		if err != nil {
 			log.Fatalf("mandelbrot: %v", err)
 		}
-	})
-
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	}
 }
 
 func mandelbrot(z complex128) color.Color {
