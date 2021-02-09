@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 	"math"
 )
 
@@ -19,16 +20,16 @@ var sin30, cos30 = math.Sin(angle), math.Cos(angle) // sin(30°), cos(30°)
 
 func main() {
 	fmt.Printf("<svg xmlns='http://www.w3.org/2000/svg' "+
-		"style='stroke: grey; fill: white; stroke-width: 0.7' "+
 		"width='%d' height='%d'>", width, height)
 	for i := 0; i < cells; i++ {
 		for j := 0; j < cells; j++ {
-			ax, ay, aok := corner(i+1, j)
-			bx, by, bok := corner(i, j)
-			cx, cy, cok := corner(i, j+1)
-			dx, dy, dok := corner(i+1, j+1)
+			ax, ay, _, aok := corner(i+1, j)
+			bx, by, c, bok := corner(i, j)
+			cx, cy, _, cok := corner(i, j+1)
+			dx, dy, _, dok := corner(i+1, j+1)
 			if aok && bok && cok && dok {
-				fmt.Printf("<polygon points='%g,%g %g,%g %g,%g %g,%g'/>\n",
+				fmt.Printf("<polygon fill='rgb(%d,%d,%d)' points='%g,%g %g,%g %g,%g %g,%g'/>\n",
+					c.R, c.G, c.B,
 					ax, ay, bx, by, cx, cy, dx, dy)
 			}
 		}
@@ -36,7 +37,7 @@ func main() {
 	fmt.Println("</svg>")
 }
 
-func corner(i, j int) (sx float64, sy float64, ok bool) {
+func corner(i, j int) (sx float64, sy float64, c color.RGBA, ok bool) {
 	// Find point (x,y) at corner of cell (i,j).
 	x := xyrange * (float64(i)/cells - 0.5)
 	y := xyrange * (float64(j)/cells - 0.5)
@@ -50,6 +51,16 @@ func corner(i, j int) (sx float64, sy float64, ok bool) {
 	// Project (x,y,z) isometrically onto 2-D SVG canvas (sx,sy).
 	sx = width/2 + (x-y)*cos30*xyscale
 	sy = height/2 + (x+y)*sin30*xyscale - z*zscale
+	cscale := (z+1)/2
+	var r, g, b uint8
+	r = uint8(255*cscale)
+	if cscale <= 0.5 {
+		g = uint8(512*cscale)
+	} else {
+		g = uint8(512-512*cscale)
+	}
+	b = uint8(255-255*cscale)
+	c = color.RGBA{r, g, b, 255}
 	return
 }
 
