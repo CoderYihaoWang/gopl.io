@@ -34,7 +34,10 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		png.Encode(w, img)
+		err := png.Encode(w, img)
+		if err != nil {
+			log.Fatalf("mandelbrot: %v", err)
+		}
 	})
 
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
