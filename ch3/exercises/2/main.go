@@ -54,8 +54,8 @@ func corner(i, j int) (sx float64, sy float64, ok bool) {
 }
 
 func f(x, y float64) (z float64, ok bool) {
-	r := math.Hypot(x, y) // distance from (0,0)
-	z = 1 - r
+	// An oval surface
+	z = math.Sqrt(1 - x*x/150 - y*y/100)
 	if math.IsInf(z, 0) || math.IsNaN(z) {
 		return 0.0, false
 	}
