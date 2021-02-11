@@ -12,6 +12,7 @@ func main() {
 	}
 }
 
+// None recursive version of comma using bytes.Buffer
 func comma(s string) string {
 	var buf bytes.Buffer
 	cur := 0
